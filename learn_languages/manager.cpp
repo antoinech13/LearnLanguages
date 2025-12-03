@@ -57,10 +57,10 @@ void Manager::start()
 		if (exerciceChoice == 1)
 			translateWords();
 		else if (exerciceChoice == 2)
-			continue;
-			//	meaningWords();
+			meaningWords();
 		else if (exerciceChoice == 3)
 			continue;
+			
 		//	learnVerbs();
 		else
 			std::cout << "Invalid choice, please try again." << std::endl;
@@ -81,13 +81,21 @@ void Manager::displayLanguages(const std::vector<std::string>& languages) const
 
 void Manager::translateWords() const
 {
+	compareWords(m_parser.getLanguageIdx(m_selfLanguage) - 1, m_parser.getLanguageIdx(m_choosedLanguage) - 1);
+}
+
+void Manager::meaningWords() const {
+
+	compareWords(m_parser.getLanguageIdx(m_choosedLanguage) - 1, m_parser.getLanguageIdx(m_selfLanguage) - 1);
+
+}
+
+
+void Manager::compareWords(const int idxOfKnowLanguage, const int idxOfLearningLanguage) const
+{
 
 	int wordStart, wordEnd, wordCount = 0;
-	int idxOfKnowLanguage, idxOfLearningLanguage;
 	std::string answer;
-
-	idxOfKnowLanguage = m_parser.getLanguageIdx(m_selfLanguage) - 1;
-	idxOfLearningLanguage = m_parser.getLanguageIdx(m_choosedLanguage) - 1;
 
 	std::cout << "you selected " << std::to_string(idxOfKnowLanguage) << " for known language and " << std::to_string(idxOfLearningLanguage) << " for learning language" << std::endl;
 
@@ -101,10 +109,10 @@ void Manager::translateWords() const
 
 	std::cout << "Write /stop when you want to stop ! " << std::endl;
 
-	while(answer != "/stop" && wordCount > 0)
+	while (answer != "/stop" && wordCount > 0)
 	{
 		std::cout << "Translate this word: ";
-		
+
 		int randomIndex = std::rand() % wordCount + wordStart;
 		std::vector<std::string> solutions;
 		Word toTranslate;
@@ -117,67 +125,42 @@ void Manager::translateWords() const
 
 		std::cout << toTranslate.word << std::endl;
 
-		if( !std::getline(std::cin, answer))
+		if (!std::getline(std::cin, answer))
 			throw std::runtime_error("Input error");
 
-		if(answer == "/stop")
+		if (answer == "/stop")
 			break;
 
-		auto it = std::find(solutions.begin(), solutions.end(), answer);
+		auto it = std::find_if(solutions.begin(), solutions.end(),
+			[&](const std::string& s)
+			{
+				return equalsIgnoreCase(s, answer);
+			});
 
-		if(it != solutions.end())
+		if (it != solutions.end())
 			std::cout << "Correct!" << std::endl;
 		else {
 			std::cout << "Wrong! The correct answer(s) was (were): " << std::endl;
 			for (const auto& solution : solutions)
 				std::cout << solution << std::endl;
 		}
-			
-
 		
+		std::cout << std::endl;
+
 	}
 
-
 }
-/*
-void Manager::meaningWords() const
+
+bool Manager::equalsIgnoreCase(const std::string& str1, const std::string& str2) const
 {
-	int wordCount = 0;
-	int idxOfKnowLanguage, idxOfLearningLanguage;
-	std::string toTranslate, solution, answer;
-	std::cout << "How many words do you want to practise ?" << std::endl;
-	
-	wordCount = Utils::inputToIntInRange(1, m_parser.getWordsNumber());
-	idxOfKnowLanguage = m_parser.getLanguageIdx(m_selfLanguage) - 1;
-	idxOfLearningLanguage = m_parser.getLanguageIdx(m_choosedLanguage) - 1;
-
-	std::cout << "Write /stop when you want to stop ! " << std::endl;
-
-	while(answer != "/stop" && wordCount > 0)
-	{
-		std::cout << "What does this word mean: ";
-		
-		int randomIndex = std::rand() % wordCount;
-		
-		toTranslate = m_parser.getWord(randomIndex, idxOfLearningLanguage);
-		solution = m_parser.getWord(randomIndex, idxOfKnowLanguage);
-		std::cout << toTranslate << std::endl;
-		
-		if( !std::getline(std::cin, answer))
-			throw std::runtime_error("Input error");
-		
-		if(answer == "/stop")
-			break;
-		
-		if(solution == answer)
-			std::cout << "Correct!" << std::endl;
-		else
-			std::cout << "Wrong! The correct answer was: " << solution << std::endl;
-		
-	}
-
+	return str1.size() == str2.size() &&
+		std::equal(str1.begin(), str1.end(), str2.begin(),
+			[](unsigned char x, unsigned char y) {
+				return std::tolower(x) == std::tolower(y);
+			});
 }
 
+/*
 void Manager::learnVerbs() const
 {
 }*/

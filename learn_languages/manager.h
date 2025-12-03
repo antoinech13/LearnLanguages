@@ -20,7 +20,13 @@ private:
 
 	void displayLanguages(const std::vector<std::string>& languages) const;
 	void translateWords() const;
-	//void meaningWords() const;
+	void meaningWords() const;
+
+	void compareWords(const int idxSelfLanguage, const int idxChoosedLanguage) const;
+	bool equalsIgnoreCase(const std::string& str1, const std::string& str2) const;
+	
 	//void learnVerbs() const;
+
+
 
 };
