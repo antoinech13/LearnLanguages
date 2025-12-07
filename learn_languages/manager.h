@@ -1,7 +1,13 @@
 #pragma once
 
+#include <algorithm>	// std::transform 
+#include <cstdlib>    // std::srand
+#include <ctime> 	   // std::time
+
 #include "fileParser2.h"
 #include "./dataStruct.h"
+
+
 
 class Manager {
 

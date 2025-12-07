@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <vector>
 #include <ranges>
+#include <algorithm>
+#include <ranges>
 
 #include "./utils.h"
 #include "./dataStruct.h"

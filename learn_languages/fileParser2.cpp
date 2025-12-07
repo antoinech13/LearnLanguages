@@ -28,7 +28,8 @@ void Parser::parse() {
 
 	while (std::getline(fichier, line)) {
 
-		if (line.empty()) continue;
+		auto pos = line.find_first_not_of(" \t\r");
+		if (pos == std::string::npos) continue;
 
 		if (line[0] == '#') {
 
@@ -44,6 +45,9 @@ void Parser::parse() {
 
 			continue;
 		}
+
+
+		std::cout << "Parsing line in section " << static_cast<int>(current) << ": " << line << std::endl;
 
 		switch (current) {
 
